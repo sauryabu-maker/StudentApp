@@ -1,29 +1,51 @@
-
 name: Python CI Build
 
 on:
   push:
+    branches: [main]
   pull_request:
+    branches: [main]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Download source code
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Step 2: Install Python
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install test dependency
-        run: python -m pip install pytest
+      # Step 3: Install project dependencies
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
 
-      - name: Check Python syntax
-        run: python -m compileall -q app.py test_app.py
 
-      - name: Run automated tests
+      # Step 4: Install code quality tools
+      - name: Install quality tools
+        run: python -m pip install ruff bandit
+
+      # Step 5: Check code quality
+      - name: Run Ruff Linter
+        run: ruff check .
+
+      # Step 6: Check code formatting
+      - name: Check Code Formatting
+        run: ruff format --check .
+
+      # Step 7: Perform security analysis
+      - name: Run Bandit Security Check
+        run: bandit -r app.py
+
+      # Step 8: Run automated unit tests
+      - name: Run Unit Tests
         run: python -m pytest -v
 
+      # Step 9: Check Python syntax
+      - name: Check Python syntax
+        run: python -m compileall -q .
