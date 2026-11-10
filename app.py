@@ -1,7 +1,14 @@
-def calculate_total(marks):
-    return sum(marks)
+def calculate_average(marks):
+    total = sum(marks)
+    average = total / len(marks)
+    return average
 
-
-if __name__ == "__main__":
-    marks = [80, 75, 90]
-    print("Total marks:", calculate_total(marks))
+def calculate_grade(average):
+    if average >= 90:
+        return "A"
+    elif average >= 75:
+        return "B"
+    elif average >= 50:
+        return "C"
+    else:
+        return "F"
