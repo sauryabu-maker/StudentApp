@@ -1,27 +1,25 @@
-name: CI Build and Artifact
 
-on: [push, pull_request]
+name: Python CI Build
+
+on:
+  push:
+  pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Run tests
-        run: python -m unittest -v
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
 
-      - name: Package application
-        run: zip shop-app.zip shop.py test_shop.py
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: shop-application
-          path: shop-app.zip
-          retention-days: 7
+      - name: Run automated tests
+        run: python -m pytest -v
